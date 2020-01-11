@@ -49,23 +49,25 @@ function doPost(e) {
       
     } 
     //テスト用で追加 あとで消す Start
-    if(event.type == "message"){
-      SetLocation(event)
+    
+     //PostBackイベント(質問ボタン押下時の処理)
+    if(event.type === 'postback'){
+      var data = JSON.parse(json).events[0].postback.data;
+      
+      if(data.match("000001")){
+        test(event)
+      }
     }
+    
+    //if(event.type == "message"){
+    //  SetLocation(event)
+    //}
     //テスト用で追加 End
     
  });
 }
 
 function SetLocation(e) {
-  //var posted_json = JSON.parse(e.postData.contents);
-  //var events = posted_json.events;
-  
-   //送られたLINEメッセージを取得
-  //var json = JSON.parse(e.postData.contents);
-  //var user_message = json.events[0].message.text; 
-  //var receive_message_type = json.events[0].message.type;
-  
   var postData = {
         "replyToken" :e.replyToken,
         "messages":[
@@ -80,12 +82,58 @@ function SetLocation(e) {
                          {
                            "type": "postback",
                            "label": "TOPを開く",
-                           "data": "{\"action\":\"detail\",\"id\":123456}"
+                           "text": "postback1",
+                           "data": "000001"
                          },
                          {
                            "type": "postback",
                            "label": "記事を開く",
-                           "data": "{\"action\":\"detail\",\"id\":123456}"
+                           "text": "postback2",
+                           "data": "000002"
+                         }
+                       ]
+            }
+          }
+        ]
+  };
+      
+      
+  var options = {
+        "method" : "post",
+    "headers" : {
+          "Content-Type" : "application/json",
+          "Authorization" : "Bearer " + channel_access_token
+    },
+        "payload" : JSON.stringify(postData)
+  };
+  UrlFetchApp.fetch(url, options);
+}
+
+
+
+function test(e) {
+  var postData = {
+        "replyToken" :e.replyToken,
+        "messages":[
+          {
+                     "type": "template",
+                     "altText": "ボタンテンプレートメッセージ",
+            "template": {
+                       "type": "buttons",
+                       "title": "test",
+                       "text": "testです",
+                       "actions": [
+                         {
+                           "type": "postback",
+                           "label": "TOPを開く",
+                           "text": "postback1",
+                           "data": "000001"
+                         },
+                         {
+                           "type": "postback",
+                           "label": "記事を開く",
+                           "text": "postback2",
+                           "data": "000002"
                          }
                        ]
             }
