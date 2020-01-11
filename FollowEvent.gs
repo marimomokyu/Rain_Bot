@@ -25,6 +25,7 @@ function doPost(e) {
       var sheet = spreadsheet.getActiveSheet();
       var ALastRow = sheet.getLastRow();
       var UserID = JSON.parse(e.postData.contents).events[0].source.userId;   
+      
       //ユーザーIDの重複調査
       //ユーザーID一覧を取得
       var ArrayUserID = sheet.getRange(1,1,ALastRow).getValues();
@@ -47,32 +48,15 @@ function doPost(e) {
       
       
     } 
+    //テスト用で追加 あとで消す Start
+    if(event.type == "message"){
+      SetLocation(event)
+    }
+    //テスト用で追加 End
+    
  });
 }
 
-function follow(e) {
-  var message = {
-    "replyToken" : e.replyToken,
-    "messages" : [{
-        "type": "text",
-        "text" : "フォローありがとう！"
-      },{
-        "type": "sticker",
-        "packageId": "11539",
-        "stickerId": "52114131"
-      }]};
-  var options = {
-    "method" : "post",
-    "headers" : {
-      "Content-Type" : "application/json",
-      "Authorization" : "Bearer " + channel_access_token
-    },
-    "payload" : JSON.stringify(message)
-  };
-  UrlFetchApp.fetch(url, options);
-}
-
-//テスト用で追加 Start
 function SetLocation(e) {
   //var posted_json = JSON.parse(e.postData.contents);
   //var events = posted_json.events;
@@ -92,17 +76,10 @@ function SetLocation(e) {
                        "type": "buttons",
                        "title": "質問文",
                        "text": "以下より選択してください。",
-              "defaultAction": {
-                         "type": "uri",
-                         "label": "View detail",
-                         "uri": "https://arukayies.com/"
-              },
                        "actions": [
                          {
-                           //"type": "uri",
                            "type": "postback",
                            "label": "TOPを開く",
-                           //"uri": "https://arukayies.com/"
                            "data": "{\"action\":\"detail\",\"id\":123456}"
                          },
                          {
@@ -125,10 +102,8 @@ function SetLocation(e) {
     },
         "payload" : JSON.stringify(postData)
   };
-  //var reply = UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", options);
   UrlFetchApp.fetch(url, options);
 }
-//テスト用で追加 End
 
 
 
